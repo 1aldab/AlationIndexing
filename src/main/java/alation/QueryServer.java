@@ -16,10 +16,10 @@ public class QueryServer {
 
     private Set<Pair> getMatchingQueries(String prefix) {
         prefix = prefix.toLowerCase().trim();
-        Collection<List<Pair>> allMatching = indexer.namesTrie.subMap(prefix, prefix + Character.MAX_VALUE).values();
+        Collection<Queue<Pair>> allMatching = indexer.namesTrie.subMap(prefix, prefix + Character.MAX_VALUE).values();
         LOGGER.log(Level.FINE, "list of all matching queries (may include duplicates) for keyword \"" + prefix + "\": " + allMatching);
         Set<Pair> uniqueMatching = new HashSet<>();
-        for (List list : allMatching) uniqueMatching.addAll(list);
+        for (Queue queue : allMatching) uniqueMatching.addAll(queue);
         LOGGER.log(Level.INFO, "list of all unique matching queries for keyword \"" + prefix + "\": " + uniqueMatching);
         return uniqueMatching;
     }

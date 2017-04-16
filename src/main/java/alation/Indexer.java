@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class Indexer {
 
     private final static Logger LOGGER = Logger.getLogger(Indexer.class.getName());
-    SortedMap<String, List<Pair>> namesTrie;
+    SortedMap<String, Queue<Pair>> namesTrie;
 
     public Indexer(String pathToFile) {
         String extension = pathToFile.substring(pathToFile.lastIndexOf(".") + 1);
@@ -39,8 +39,12 @@ public class Indexer {
                 LOGGER.log(Level.FINEST, "adding pair " + p + " to the namesTrie");
                 for (String token : parts[0].toLowerCase().trim().split("_")) {
                     if (!namesTrie.containsKey(token))
-                        namesTrie.put(token, new ArrayList<Pair>());
+                        namesTrie.put(token, new PriorityQueue<Pair>());
                     namesTrie.get(token).add(p);
+                    if (namesTrie.get(token).size() > 10) {
+                        Pair small = namesTrie.get(token).remove();
+                        LOGGER.log(Level.FINEST, "pair " + small + " removed from \"" + token + "\" branch");
+                    }
                 }
             }
         } catch (Exception ex) {
